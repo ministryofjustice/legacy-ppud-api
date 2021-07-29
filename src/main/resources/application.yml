@@ -1,10 +1,10 @@
 info.app:
-  name: HMPPS Template Kotlin
+  name: Legacy Ppud Api
   version: 1.0
 
 spring:
   application:
-    name: hmpps-template-kotlin
+    name: legacy-ppud-api
   codec:
     max-in-memory-size: 10MB
 

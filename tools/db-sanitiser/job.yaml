@@ -1,0 +1,17 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ppud-legacy-api-db-sanitiser
+spec:
+  parallelism: 1
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: ppud-legacy-api-db-sanitiser
+          image: quay.io/hmpps/ppud-legacy-api-db-sanitiser:latest
+      envFrom:
+        - secretRef:
+          name: ppud-replica-database

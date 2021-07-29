@@ -6,10 +6,10 @@ orbs:
 parameters:
   alerts-slack-channel:
     type: string
-    default: dps_alerts_security
+    default: ppud-replacement-devs
   releases-slack-channel:
     type: string
-    default: dps-releases
+    default: ppud-replacement-releases
 
 jobs:
   validate:
@@ -35,20 +35,67 @@ jobs:
 
 workflows:
   version: 2
+  db-sanitiser:
+    jobs:
+      - hmpps/build_docker:
+          name: build_db_sanitiser
+          image_name: quay.io/hmpps/ppud-legacy-api-db-sanitiser
+          dockerfile_dir: tools/db-sanitiser
+          publish: false
+          persist_container_image: true
+
+      - hmpps/trivy_pipeline_scan:
+          name: trivy_scan_db_sanitiser
+          requires:
+            - build_db_sanitiser
+
+      - hmpps/publish_docker:
+          name: publish_db_sanitiser
+          requires:
+            - trivy_scan_db_sanitiser
+          filters:
+            branches:
+              only:
+                - main
+
   build-test-and-deploy:
     jobs:
       - validate:
           filters:
             tags:
               ignore: /.*/
+
       - hmpps/helm_lint:
           name: helm_lint
+
       - hmpps/build_docker:
           name: build_docker
+          publish: false
+          persist_container_image: true
+
+      - hmpps/trivy_pipeline_scan:
+          name: trivy_scan_low_medium_cves
+          fail_build: false
+          cve_severities_to_check: UNKNOWN,LOW,MEDIUM
+          requires:
+            - build_docker
+
+      - hmpps/trivy_pipeline_scan:
+          name: trivy_scan
+          requires:
+            - build_docker
+
+      - hmpps/publish_docker:
+          name: publish_docker
+          requires:
+            - validate
+            - helm_lint
+            - trivy_scan
           filters:
             branches:
               only:
                 - main
+
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
@@ -58,9 +105,8 @@ workflows:
               only:
                 - main
           requires:
-            - validate
-            - build_docker
-            - helm_lint
+            - publish_docker
+
 #      - request-preprod-approval:
 #          type: approval
 #          requires:
@@ -70,9 +116,10 @@ workflows:
 #          env: "preprod"
 #          context:
 #            - hmpps-common-vars
-#            - hmpps-template-kotlin-preprod
+#            - legacy-ppud-api-preprod
 #          requires:
 #            - request-preprod-approval
+#
 #      - request-prod-approval:
 #          type: approval
 #          requires:
@@ -84,7 +131,7 @@ workflows:
 #          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
 #          context:
 #            - hmpps-common-vars
-#            - hmpps-template-kotlin-prod
+#            - legacy-ppud-api-prod
 #          requires:
 #            - request-prod-approval
 
@@ -110,5 +157,3 @@ workflows:
           context:
             - veracode-credentials
             - hmpps-common-vars
-
-
