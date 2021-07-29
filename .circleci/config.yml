@@ -6,10 +6,10 @@ orbs:
 parameters:
   alerts-slack-channel:
     type: string
-    default: dps_alerts_security
+    default: ppud-replacement-devs
   releases-slack-channel:
     type: string
-    default: dps-releases
+    default: ppud-replacement-releases
 
 jobs:
   validate:
@@ -35,6 +35,28 @@ jobs:
 
 workflows:
   version: 2
+  db-sanitiser:
+    jobs:
+      - hmpps/build_docker:
+          name: build_db_sanitiser
+          image_name: quay.io/hmpps/ppud-legacy-api-db-sanitiser
+          dockerfile_dir: tools/db-sanitiser
+          publish: false
+          persist_container_image: true
+
+      - hmpps/trivy_pipeline_scan:
+          name: trivy_scan_db_sanitiser
+          requires:
+            - build_db_sanitiser
+
+      - hmpps/publish_docker:
+          name: publish_db_sanitiser
+          requires:
+            - trivy_scan_db_sanitiser
+          filters:
+            branches:
+              only:
+                - main
   build-test-and-deploy:
     jobs:
       - validate:

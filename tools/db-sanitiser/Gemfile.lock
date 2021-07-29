@@ -1,0 +1,23 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    concurrent-ruby (1.1.9)
+    faker (2.18.0)
+      i18n (>= 1.6, < 2)
+    i18n (1.8.10)
+      concurrent-ruby (~> 1.0)
+    sequel (5.46.0)
+    tiny_tds (2.1.5)
+
+PLATFORMS
+  ruby
+  x86_64-darwin-20
+  x86_64-linux-musl
+
+DEPENDENCIES
+  faker
+  sequel
+  tiny_tds
+
+BUNDLED WITH
+   2.2.22
