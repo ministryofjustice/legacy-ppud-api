@@ -57,20 +57,45 @@ workflows:
             branches:
               only:
                 - main
+
   build-test-and-deploy:
     jobs:
       - validate:
           filters:
             tags:
               ignore: /.*/
+
       - hmpps/helm_lint:
           name: helm_lint
+
       - hmpps/build_docker:
           name: build_docker
+          publish: false
+          persist_container_image: true
+
+      - hmpps/trivy_pipeline_scan:
+          name: trivy_scan_low_medium_cves
+          fail_build: false
+          cve_severities_to_check: UNKNOWN,LOW,MEDIUM
+          requires:
+            - build_docker
+
+      - hmpps/trivy_pipeline_scan:
+          name: trivy_scan
+          requires:
+            - build_docker
+
+      - hmpps/publish_docker:
+          name: publish_docker
+          requires:
+            - validate
+            - helm_lint
+            - trivy_scan
           filters:
             branches:
               only:
                 - main
+
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
@@ -80,9 +105,8 @@ workflows:
               only:
                 - main
           requires:
-            - validate
-            - build_docker
-            - helm_lint
+            - publish_docker
+
 #      - request-preprod-approval:
 #          type: approval
 #          requires:
@@ -95,6 +119,7 @@ workflows:
 #            - hmpps-template-kotlin-preprod
 #          requires:
 #            - request-preprod-approval
+#
 #      - request-prod-approval:
 #          type: approval
 #          requires:
@@ -132,5 +157,3 @@ workflows:
           context:
             - veracode-credentials
             - hmpps-common-vars
-
-
