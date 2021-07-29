@@ -116,7 +116,7 @@ workflows:
 #          env: "preprod"
 #          context:
 #            - hmpps-common-vars
-#            - hmpps-template-kotlin-preprod
+#            - legacy-ppud-api-preprod
 #          requires:
 #            - request-preprod-approval
 #
@@ -131,7 +131,7 @@ workflows:
 #          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
 #          context:
 #            - hmpps-common-vars
-#            - hmpps-template-kotlin-prod
+#            - legacy-ppud-api-prod
 #          requires:
 #            - request-prod-approval
 
