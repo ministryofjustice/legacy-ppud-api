@@ -16,3 +16,9 @@ kubectl -n ppud-replacement-preprod apply -f job.yaml
 
 You can check on progress by tailing the logs etc. Once the script has run
 to completion the job will stop and show a success/fail status.
+
+Once complete please clean up the remaining job and pods:
+
+```
+kubectl -n ppud-replacement-preprod delete -f job.yaml
+```

@@ -12,7 +12,7 @@ db_connection_params = {
   host: ENV.fetch('host'),
   port: '1433',
   database: ENV.fetch('name'),
-  user: ENV.fetch('user'),
+  user: ENV.fetch('username'),
   password: ENV.fetch('password')
 }
 
