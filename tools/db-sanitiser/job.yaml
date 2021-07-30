@@ -12,6 +12,6 @@ spec:
       containers:
         - name: ppud-legacy-api-db-sanitiser
           image: quay.io/hmpps/ppud-legacy-api-db-sanitiser:latest
-      envFrom:
-        - secretRef:
-          name: ppud-replica-database
+          envFrom:
+            - secretRef:
+                name: ppud-replica-database
