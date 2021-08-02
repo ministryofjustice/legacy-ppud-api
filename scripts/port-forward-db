@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -euo pipefail
+
+DB_HOST=$(kubectl get secret ppud-replica-database -o json | jq -r '.data.host | @base64d')
+PFP_NAME="port-forward-pod-$(whoami)"
+
+set +e
+PFP_COUNT=$(kubectl get pods | grep -c "${PFP_NAME}")
+set -e
+
+if [ "${PFP_COUNT}" -eq "0" ]; then
+  echo "Starting up port forward pod..."
+
+  kubectl run \
+    "${PFP_NAME}" \
+    --image=ministryofjustice/port-forward \
+    --port=1433 \
+    --env="REMOTE_HOST=${DB_HOST}" \
+    --env="LOCAL_PORT=1433" \
+    --env="REMOTE_PORT=1433"
+
+  sleep 5
+fi
+
+kubectl port-forward "${PFP_NAME}" 1433:1433
+
+echo "You can now connect to the database on 127.0.0.1:1433"

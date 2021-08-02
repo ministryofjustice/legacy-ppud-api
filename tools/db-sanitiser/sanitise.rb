@@ -17,7 +17,8 @@ db_connection_params = {
 }
 
 DB = Sequel.connect(db_connection_params)
-DB.loggers << Logger.new($stdout)
+logger = Logger.new($stdout)
+DB.loggers << logger
 
 offenders = DB[:OFFENDER]
 
@@ -83,3 +84,5 @@ caseworkers.select(:CASEWORKER_ID).all.each do |row|
     .where(CASEWORKER_ID: row[:caseworker_id])
     .update(LOGIN_NAME: login, FULL_NAME: name, EMAIL: email)
 end
+
+logger.info('FIN.')
