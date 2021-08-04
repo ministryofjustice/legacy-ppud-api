@@ -1,10 +1,9 @@
 #!/bin/bash
 
 set -euo pipefail
-set -x
 
-ENVIRONMENT="ppud-replacement-${ENV:-preprod}"
-PFP_NAME="legacy-ppud-api-port-forward-$(whoami)"
+ENVIRONMENT="ppud-replacement-${ENV:-dev}"
+PFP_NAME="legacy-ppud-api-port-forward-$(whoami | tr ._ -)"
 SECRET=ppud-replica-database
 
 DB_HOST=$(kubectl -n "${ENVIRONMENT}" get secret "${SECRET}" -o json | jq -r '.data.host | @base64d')
