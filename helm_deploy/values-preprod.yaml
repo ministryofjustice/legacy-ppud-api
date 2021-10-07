@@ -5,16 +5,16 @@ generic-service:
   replicaCount: 2
 
   ingress:
-    host: legacy-ppud-api-dev.hmpps.service.justice.gov.uk
+    host: legacy-ppud-api-preprod.hmpps.service.justice.gov.uk
 
   env:
-    APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.dev.json
+    APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.preprod.json
 
 # CloudPlatform AlertManager receiver to route promethues alerts to slack
 # See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts
 
 generic-prometheus-alerts:
-  alertSeverity: ppud-replacement-alerts
+  alertSeverity: ppud-replacement-preprod
   extraDashboardTags:
     - ppud-replacement
-    - dev
+    - pre-prod
