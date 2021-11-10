@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# This creates a port-forward to the HMPPS Cloud hosted SQL Server PPUD replica
+# This creates a port-forward to the (ORIGINAL) LUMEN hosted PPUD SQL Server
 
 function usage {
   echo "
@@ -56,13 +56,14 @@ fi
 set -u
 
 K8S_NAMESPACE="ppud-replacement-${ENV}"
-PFP_NAME="legacy-ppud-api-db-proxy-$(whoami | tr ._ -)"
-SECRET=ppud-replica-database
+PFP_NAME="legacy-ppud-api-ppud-db-proxy-$(whoami | tr ._ -)"
+SECRET=ppud-cdc-database
 
 DB_HOST=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json | jq -r '.data.host | @base64d')
 DB_USER=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json | jq -r '.data.username | @base64d')
 DB_PASS=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json | jq -r '.data.password | @base64d')
 DB_PORT=1433
+DB_PORT_PLUS_1=1434
 
 echo "Connecting to ${K8S_NAMESPACE}"
 
@@ -85,11 +86,11 @@ if [ "${PFP_COUNT}" -eq "0" ]; then
 fi
 
 set +e
-cmd="kubectl -n ${K8S_NAMESPACE} port-forward ${PFP_NAME} ${DB_PORT}:${DB_PORT}"
+cmd="kubectl -n ${K8S_NAMESPACE} port-forward ${PFP_NAME} ${DB_PORT_PLUS_1}:${DB_PORT}"
 pid=$(pgrep -f "${cmd}")
 set -e
 
-echo "You can now connect to the database on 127.0.0.1:${DB_PORT} - username: ${DB_USER} - password: ${DB_PASS}"
+echo "You can now connect to the database on 127.0.0.1:${DB_PORT_PLUS_1} - username: ${DB_USER} - password: ${DB_PASS}"
 
 # if the port-forward isn't already running, start it...
 if [[ -z "${pid}" ]]; then
