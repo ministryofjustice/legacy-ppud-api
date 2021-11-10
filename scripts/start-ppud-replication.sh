@@ -59,11 +59,12 @@ set -u
 K8S_NAMESPACE="ppud-replacement-${ENV}"
 SECRET=dms-instance
 
-REPLICATION_INSTANCE_ARN=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json | jq -r '.data.replication_instance_arn | @base64d')
-REPLICATION_TASK_ARN=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json | jq -r '.data.replication_task_arn | @base64d')
-REPLICATION_TASK_ID=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json | jq -r '.data.replication_task_id | @base64d')
-AWS_ACCESS_KEY_ID=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json | jq -r '.data.access_key_id | @base64d')
-AWS_SECRET_ACCESS_KEY=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json | jq -r '.data.secret_access_key | @base64d')
+SECRET_JSON=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json)
+REPLICATION_INSTANCE_ARN=$(echo "${SECRET_JSON}" | jq -r '.data.replication_instance_arn | @base64d')
+REPLICATION_TASK_ARN=$(echo "${SECRET_JSON}" | jq -r '.data.replication_task_arn | @base64d')
+REPLICATION_TASK_ID=$(echo "${SECRET_JSON}" | jq -r '.data.replication_task_id | @base64d')
+AWS_ACCESS_KEY_ID=$(echo "${SECRET_JSON}" | jq -r '.data.access_key_id | @base64d')
+AWS_SECRET_ACCESS_KEY=$(echo "${SECRET_JSON}" | jq -r '.data.secret_access_key | @base64d')
 export REPLICATION_INSTANCE_ARN
 export REPLICATION_TASK_ARN
 export REPLICATION_TASK_ID

@@ -59,9 +59,10 @@ K8S_NAMESPACE="ppud-replacement-${ENV}"
 PFP_NAME="legacy-ppud-api-ppud-db-proxy-$(whoami | tr ._ -)"
 SECRET=ppud-cdc-database
 
-DB_HOST=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json | jq -r '.data.host | @base64d')
-DB_USER=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json | jq -r '.data.username | @base64d')
-DB_PASS=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json | jq -r '.data.password | @base64d')
+SECRET_JSON=$(kubectl -n "${K8S_NAMESPACE}" get secret "${SECRET}" -o json)
+DB_HOST=$(echo "${SECRET_JSON}" | jq -r '.data.host | @base64d')
+DB_USER=$(echo "${SECRET_JSON}" | jq -r '.data.username | @base64d')
+DB_PASS=$(echo "${SECRET_JSON}" | jq -r '.data.password | @base64d')
 DB_PORT=1433
 DB_PORT_PLUS_1=1434
 
