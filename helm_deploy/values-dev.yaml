@@ -1,6 +1,8 @@
 ---
 # Per environment values which override defaults in legacy-ppud-api/values.yaml
 
+environment: dev
+
 generic-service:
   replicaCount: 2
 
