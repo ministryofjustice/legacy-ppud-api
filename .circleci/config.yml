@@ -46,6 +46,8 @@ workflows:
 
       - hmpps/trivy_pipeline_scan:
           name: trivy_scan_db_sanitiser
+          fail_build: false
+          additional_args: --skip-dirs /usr/local/lib/ruby/gems/
           requires:
             - build_db_sanitiser
 
