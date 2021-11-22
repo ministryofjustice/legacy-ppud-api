@@ -1,8 +1,6 @@
 ---
 # Per environment values which override defaults in legacy-ppud-api/values.yaml
 
-environment: preprod
-
 generic-service:
   replicaCount: 2
 
@@ -16,7 +14,11 @@ generic-service:
 # See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts
 
 generic-prometheus-alerts:
-  alertSeverity: ppud-replacement-preprod
+  alertSeverity: &alertSeverity ppud-replacement-preprod
   extraDashboardTags:
     - ppud-replacement
-    - pre-prod
+    - &environment pre-prod
+
+# Values needed for templates within this project
+environment: *environment
+alertSeverity: *alertSeverity

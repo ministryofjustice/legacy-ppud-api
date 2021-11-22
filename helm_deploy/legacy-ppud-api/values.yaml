@@ -41,4 +41,7 @@ generic-service:
     cloudplatform-live1-3: "35.177.252.54/32"
 
 generic-prometheus-alerts:
-  targetApplication: legacy-ppud-api
+  targetApplication: &alertTargetApplication legacy-ppud-api
+
+# Values needed for templates within this project
+alertTargetApplication: *alertTargetApplication

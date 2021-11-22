@@ -1,0 +1,38 @@
+{{- $threshold := 30 }}
+{{- $runbookUrl := "https://github.com/ministryofjustice/legacy-ppud-api/blob/main/docs/database-sync-runbook.md" }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "generic-service.fullname" . }}-ppud-sync
+  labels:
+    helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version  }}
+    app: {{ include "generic-service.name" . }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+spec:
+  groups:
+    - name: {{ include "generic-service.fullname" . }}-ppud-sync
+      rules:
+        - alert: PPUDDatabaseSyncFailure
+          annotations:
+            message: The PPUD database sync for `{{ .Values.environment }}` has been in a failed state for more than {{ $threshold }} minutes.
+            runbook_url: {{ $runbookUrl }}#database-sync-failure
+          expr: |-
+            min(dms_task_status{namespace="{{ .Release.Namespace }}",job="legacy-ppud-api-database-sync"})
+            OR
+            absent(dms_task_status{namespace="{{ .Release.Namespace }}",job="legacy-ppud-api-database-sync"})
+            < 1
+          for: {{ $threshold }}m
+          labels:
+            severity: {{ .Values.alertSeverity }}
+
+        - alert: PPUDDatabaseSyncReportingFailure
+          annotations:
+            message: The PPUD database sync check for `{{ .Values.environment }}` hasn't reported in for more than {{ $threshold }} minutes.
+            runbook_url: {{ $runbookUrl }}#database-sync-reporting-failure
+          expr: |-
+            absent(dms_task_status{namespace="{{ .Release.Namespace }}",job="legacy-ppud-api-database-sync"}) == 1
+          for: {{ $threshold }}m
+          labels:
+            severity: {{ .Values.alertSeverity }}
