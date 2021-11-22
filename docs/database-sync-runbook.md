@@ -38,7 +38,7 @@ You're looking for a single pod called something like `ppud-replacement-dev-push
 
 If this is NOT running (i.e. it's crashlooping) check the logs for the pod to see if you can find out why (`kubectl -n ppud-replacement-<environment> logs <pod-name>`) and see if you can resolve. If you need help, [#ask-cloud-platform] is your friend.
 
-If pod is there and running correctly, it means we have a metric scraping issue. If you've not diagnosed these in prometheus before, your best bet is to ask for help in [#ask-cloud-platform].
+If the pod is there and running correctly, it means we have a metric scraping issue. If you've not diagnosed these in prometheus before, your best bet is to ask for help in [#ask-cloud-platform].
 
 If the pod is not even present, it means something has gone wrong with the terraform in the [cloud-platform-environments] repo - if you're not familiar with terraform, your best bet is to ask for help in [#ask-cloud-platform].
 
