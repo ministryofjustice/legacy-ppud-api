@@ -27,6 +27,8 @@ spec:
               image: quay.io/hmpps/legacy-ppud-api:latest
               imagePullPolicy: IfNotPresent
               args:
+                - /bin/bash
+              command:
                 - /app/scripts/report-ppud-replication-status.sh
               env:
                 - name: ENVIRONMENT
