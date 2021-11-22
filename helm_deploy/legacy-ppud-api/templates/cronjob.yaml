@@ -1,0 +1,50 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "generic-service.fullname" . }}-dms-status-check
+  labels:
+    helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version  }}
+    app: {{ include "generic-service.name" . }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+spec:
+  schedule: "*/15 * * * *" # Every 15 minutes
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      parallelism: 1
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app: {{ include "generic-service.name" . }}
+            release: {{ .Release.Name }}
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: {{ include "generic-service.name" . }}
+              image: quay.io/hmpps/legacy-ppud-api:latest
+              imagePullPolicy: IfNotPresent
+              args:
+                - /app/scripts/report-ppud-replication-status.sh
+              env:
+                - name: ENVIRONMENT
+                  value: {{ .Values.environment }}
+                - name: AWS_DEFAULT_REGION
+                  value: eu-west-2
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: dms-instance
+                      key: access_key_id
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: dms-instance
+                      key: secret_access_key
+                - name: REPLICATION_TASK_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: dms-instance
+                      key: replication_task_id

@@ -1,8 +1,10 @@
 ---
 # Per environment values which override defaults in legacy-ppud-api/values.yaml
 
+environment: prod
+
 generic-service:
-  replicaCount: 2
+  replicaCount: 4
 
   ingress:
     host: legacy-ppud-api.hmpps.service.justice.gov.uk

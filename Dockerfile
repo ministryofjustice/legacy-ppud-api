@@ -15,7 +15,7 @@ ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
 
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -y curl && \
+    apt-get install -y curl jq awscli && \
     rm -rf /var/lib/apt/lists/*
 
 ENV TZ=Europe/London
@@ -29,6 +29,7 @@ COPY --from=builder --chown=appuser:appgroup /app/build/libs/legacy-ppud-api*.ja
 COPY --from=builder --chown=appuser:appgroup /app/build/libs/applicationinsights-agent*.jar /app/agent.jar
 COPY --from=builder --chown=appuser:appgroup /app/applicationinsights.json /app
 COPY --from=builder --chown=appuser:appgroup /app/applicationinsights.dev.json /app
+COPY scripts /app/scripts
 
 USER 2000
 
