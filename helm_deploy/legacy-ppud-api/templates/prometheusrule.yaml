@@ -19,10 +19,7 @@ spec:
             message: The PPUD database sync for `{{ .Values.environment }}` has been in a failed state for more than {{ $threshold }} minutes.
             runbook_url: {{ $runbookUrl }}#database-sync-failure
           expr: |-
-            min(dms_task_status{namespace="{{ .Release.Namespace }}",job="legacy-ppud-api-database-sync"})
-            OR
-            absent(dms_task_status{namespace="{{ .Release.Namespace }}",job="legacy-ppud-api-database-sync"})
-            < 1
+            min(dms_task_status{namespace="{{ .Release.Namespace }}",job="legacy-ppud-api-database-sync"}) < 1
           for: {{ $threshold }}m
           labels:
             severity: {{ .Values.alertSeverity }}
