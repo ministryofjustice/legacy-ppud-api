@@ -1,6 +1,6 @@
 # PPUD Database Sync Runbook
 
-This page contains notes deatiling what the alerts for the PPUD database sync mean and how we can go about resolving things...
+This page contains notes detailing what the alerts for the PPUD database sync mean and how we can go about resolving things...
 
 ## Database Sync Failure
 
