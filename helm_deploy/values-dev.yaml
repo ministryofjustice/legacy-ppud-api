@@ -4,9 +4,6 @@
 generic-service:
   replicaCount: 2
 
-  ingress:
-    host: legacy-ppud-api-dev.hmpps.service.justice.gov.uk
-
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.dev.json
 
