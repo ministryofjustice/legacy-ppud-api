@@ -17,9 +17,23 @@ dependencies {
 }
 
 tasks {
-  compileKotlin {
+  withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
-      jvmTarget = "16"
+      jvmTarget = JavaVersion.VERSION_16.toString() // TODO Need Kotlin 1.6 to target JVM 17 - see PUD-1243
     }
+  }
+}
+
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(16)) // TODO Need Kotlin 1.6 to target JVM 17 - see PUD-1243
+    vendor.set(JvmVendorSpec.matching("AdoptOpenJDK"))
+  }
+}
+
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(16)) // TODO Need Kotlin 1.6 to target JVM 17 - see PUD-1243
+    vendor.set(JvmVendorSpec.matching("AdoptOpenJDK"))
   }
 }
