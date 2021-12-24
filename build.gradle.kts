@@ -30,10 +30,3 @@ java {
     vendor.set(JvmVendorSpec.matching("AdoptOpenJDK"))
   }
 }
-
-java {
-  toolchain {
-    languageVersion.set(JavaLanguageVersion.of(16)) // TODO Need Kotlin 1.6 to target JVM 17 - see PUD-1243
-    vendor.set(JvmVendorSpec.matching("AdoptOpenJDK"))
-  }
-}
