@@ -33,13 +33,18 @@ server:
     include-message: always
 
 management:
+  #  TODO: PUD-1377/PUD-1454 - do not expose the metrics and health endpoints publicly?
+#  server:
+#    port: 8081
   endpoints:
+    enabled-by-default: false
     web:
       base-path: /
       exposure:
-        include: 'info, health'
+        include: 'info, health, prometheus'
   endpoint:
     health:
+      enabled: true
       cache:
         time-to-live: 2000ms
       show-components: always
@@ -47,5 +52,11 @@ management:
       probes:
         enabled: true
     info:
+      enabled: true
       cache:
         time-to-live: 2000ms
+    prometheus:
+      enabled: true
+  info:
+    env:
+      enabled: true
