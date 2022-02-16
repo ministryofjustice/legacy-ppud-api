@@ -9,6 +9,10 @@ configurations {
 
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-webflux")
+  implementation("org.springframework.boot:spring-boot-starter-actuator")
+  implementation("io.micrometer:micrometer-registry-prometheus")
+
+  testImplementation("com.natpryce:hamkrest:1.8.0.1")
 }
 
 tasks {
