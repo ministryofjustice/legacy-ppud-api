@@ -32,5 +32,6 @@ COPY --from=builder --chown=appuser:appgroup /app/applicationinsights.dev.json /
 COPY scripts /app/scripts
 
 USER 2000
+EXPOSE 8080 8081
 
 ENTRYPOINT ["java", "-javaagent:/app/agent.jar", "-jar", "/app/app.jar"]
