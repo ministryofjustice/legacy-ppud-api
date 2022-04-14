@@ -9,7 +9,7 @@ function usage {
 
 Options:
     -h --> show usage
-    -e --> environment (REQUIRED) - allowed values: 'dev' or 'preprod'
+    -e --> environment (REQUIRED) - allowed values: 'dev', 'preprod' or 'prod'
   "
 }
 
@@ -49,7 +49,7 @@ done
 
 # check for the ENV variable
 set +u
-if [[ ! "${ENV}" =~ ^(dev|preprod)$ ]]; then
+if [[ ! "${ENV}" =~ ^(dev|preprod|prod)$ ]]; then
   usage
   exit 1
 fi
